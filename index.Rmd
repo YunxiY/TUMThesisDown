@@ -1,0 +1,85 @@
+---
+#
+# Required Information --------------------------------------------------------
+# change lines 5 - 15
+title-English: "TITLE"
+title-German: "TITLE IN GERMAN"
+type: "TYPE OF THE WORK"
+author: "NAME"
+date: "SUBMISSION DATE"
+university: "DER TECHNISCHEN UNIVERSITÄT MÜNCHEN"
+faculty: "FAKULTÄT FÜR INFORMATIK"
+professor: "NAME OF PROFESSOR"
+advisor: "NAME OF ADVISOR"
+faculty-picture: infologo.jpg
+#
+# Optional Information --------------------------------------------------------
+# comment out if unnecessary
+abstract: |  
+  `r if(knitr:::is_latex_output()) paste(readLines("prelim/00-abstract.Rmd"), collapse = '\n  ')`
+acknowledge: |  
+  `r if(knitr:::is_latex_output()) paste(readLines("prelim/00-acknowledge.Rmd"), collapse = '\n  ')`
+abbreviations: |  
+  `r if(knitr:::is_latex_output()) paste(readLines("prelim/00-abbreviations.Rmd"), collapse = '\n  ')`
+lot: true                              # list of tables
+lof: true                              # list of figures
+link-citations: true
+bibliography: bib/references.bib       # bibliography file
+#
+# Rendering Options -----------------------------------------------------------
+#
+knit: "bookdown::render_book"
+header-includes: #allows you to add in your own Latex packages
+- \usepackage{float} #use the 'float' package
+- \floatplacement{figure}{H} #make every figure with caption = h
+output: 
+  huwiwidown::thesis_pdf
+space_between_paragraphs: true       # if you want spaces bt paragraph
+# header-includes:     # if including additional latex packages or commands
+  # - \setlength{\parindent}{17pt}
+---
+
+<!--
+Above is the YAML (YAML Ain't Markup Language) header that includes a lot of
+metadata used to produce the document.  Be careful with spacing in this header!
+If you'd like to include a comment that won't be produced in your resulting file
+enclose it in a block like this.
+-->
+
+<!--
+If you receive a duplicate label error after knitting, make sure to delete the
+index.Rmd file and then knit again.
+-->
+
+```{r include_packages, include = FALSE}
+# This chunk ensures that the `huwiwidown` package is installed and loaded. This
+# package includes the template files for the thesis.
+if (!require(devtools)) {
+  install.packages("devtools", repos = "http://cran.rstudio.com")
+}
+if (!require(huwiwidown)) {
+  devtools::install_github("phister/huwiwidown")
+  library(huwiwidown)
+}
+require(rsvg-convert)
+include_svg = function(path) {
+  if (knitr::is_latex_output()) {
+    output = xfun::with_ext(path, 'pdf')
+    # you can compare the timestamp of pdf against svg to avoid conversion if necessary
+    system2('rsvg-convert', c('-f', 'pdf', '-a', '-o', shQuote(c(output, path))))
+  } else {
+    output = path
+  }
+  knitr::include_graphics(output)
+}
+```
+
+<!-- 
+The {.unnumbered} option here means that the introduction will be "Section  0."
+You can also use {-} for no numbers on section. 
+-->
+
+<!--
+The body of the thesis starts underneath the text below. Feel free to delete
+everything below this.
+-->
